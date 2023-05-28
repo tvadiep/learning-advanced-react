@@ -12,7 +12,6 @@ function App() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [passwordError, setPasswordError] = useState(false);
 
   const [password, setPassword] = useState({
     value: "",
@@ -34,17 +33,14 @@ function App() {
     setFirstName('');
     setLastName('');
     setEmail('');
-    setPasswordError('');
     setRole('role');
+    setPassword({...password, isTouched: false});
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password.length < 8) setPasswordError(true);
-    else {
-      alert("Account created!");
-      clearForm();
-    }
+    alert("Account created!");
+    clearForm();
   };
 
   return (
@@ -72,8 +68,14 @@ function App() {
             <label>
               Password <sup>*</sup>
             </label>
-            <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}/>
-            {passwordError && <PasswordErrorMessage />}
+            <input type="password" placeholder="Password" value={password.value} 
+              onChange={(e) => { 
+                setPassword({ ...password, value: e.target.value }); 
+              }}
+              onBlur={
+                ()=>setPassword({...password, isTouched: true})
+              }/>
+            {password.isTouched && password.value.length <8 && <PasswordErrorMessage />}
           </div>
           <div className="Field">
             <label>
